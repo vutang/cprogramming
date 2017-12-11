@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-/*Callback Function Definition*/
+/*Callback Function Definition
+	Define a function pointer prototype
+*/
 typedef int (*PrintFunc) (void *data);
 
 /*Callee 0*/
@@ -21,7 +23,9 @@ int PrintString(void *data) {
 	return 1;
 }
 
-/*Caller*/
+/*Caller
+	Use PrintFunc as a prototype
+*/
 void Logger(void *CallBack, PrintFunc PriFunc) {
 	(*PriFunc)(CallBack);
 }
