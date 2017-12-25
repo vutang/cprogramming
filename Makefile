@@ -1,17 +1,15 @@
 TAR = echoclient
 
-CC = gcc
-LIBS = -pthread
+OBJS = csapp.o echo.o readline.o $(TAR).o
 HDRS = csapp.h
-OBJS = csapp.o echo.o $(TAR).o
 
-%.o: %.c $(HDRS)
+LIBS = -pthread
+
+all: $(OBJS)
+	gcc -o $(TAR) $^ $(CFLAGS) $(LIBS)
+
+%.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
-${TAR}: ${OBJS}
-	gcc -o $@ $^ $(LIBS)
-
-all: $(TAR)
-	
-clean:
-	rm ${TAR}	
+clean: 
+	rm *.o
