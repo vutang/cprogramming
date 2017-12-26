@@ -1,7 +1,7 @@
 TAR = echoclient
 
-OBJS = csapp.o echo.o readline.o $(TAR).o
-HDRS = csapp.h
+OBJS = csapp.o handler.o readline.o $(TAR).o
+HDRS = csapp.h cliSer.h unp.h
 
 LIBS = -pthread
 

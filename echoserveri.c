@@ -2,9 +2,11 @@
  * echoserveri.c - An iterative echo server 
  */ 
 /* $begin echoserverimain */
+
+#include "cliSer.h"
 #include "csapp.h"
 
-void echo(int connfd);
+void handler(int connfd);
 
 int main(int argc, char **argv) 
 {
@@ -21,14 +23,16 @@ int main(int argc, char **argv)
     listenfd = Open_listenfd(argv[1]);
     while (1) {
     	clientlen = sizeof(struct sockaddr_storage); 
-    	connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
+        connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
         Getnameinfo((SA *) &clientaddr, clientlen, client_hostname, MAXLINE, 
                 client_port, MAXLINE, 0);
         printf("Connected to (%s, %s)\n", client_hostname, client_port);
-    	echo(connfd);
+
+    	handler(connfd);
+
+        printf("Client release\n");
         Close(connfd);
     }
-
     exit(0);
 }
 /* $end echoserverimain */
