@@ -1,0 +1,40 @@
+ls –la
+
+top
+
+cat /etc/passwd
+
+cat /etc/passwd | grep Joe
+
+ls /home/joe
+
+cd /home/joe
+
+sudo su
+
+who
+
+passwd joe
+
+passwd joe
+
+history | grep chmod
+
+history | grep chgrp
+
+ls -la /home
+
+cat /proc/cpuinfo
+
+cat /proc/meminfo
+
+nano .bashrc
+
+.bashrc
+
+./program1 &
+
+who
+
+ls usr/local
+
