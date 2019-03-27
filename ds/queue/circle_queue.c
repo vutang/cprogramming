@@ -2,7 +2,7 @@
 * @Author: vutang
 * @Date:   2019-03-27 18:36:14
 * @Last Modified by:   vutang
-* @Last Modified time: 2019-03-27 18:38:22
+* @Last Modified time: 2019-03-27 23:14:54
 */
 #include "circle_queue.h"
 
@@ -52,7 +52,7 @@ int de_queue(queue_t *queue, char *str) {
 
     }
     else if (queue->front == QUEUE_SIZE - 1)
-        queue->front
+        queue->front = 0;
     else 
         queue->front++;
 
