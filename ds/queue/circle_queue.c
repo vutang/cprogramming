@@ -1,10 +1,17 @@
 /*
 * @Author: vutang
 * @Date:   2019-03-27 18:36:14
-* @Last Modified by:   vutang
-* @Last Modified time: 2019-03-27 23:14:54
+* @Last Modified by:   Vu Tang
+* @Last Modified time: 2019-03-28 00:01:16
 */
 #include "circle_queue.h"
+#include <string.h>
+
+#ifdef DEBUG
+#define DEBUG(s, ...) printf("%s\n", __VA_ARGS__);
+#else
+#define DEBUG(s, ...)
+#endif
 
 /*Initialize Queue*/
 void ini_queue(queue_t *queue) {
@@ -33,19 +40,19 @@ int en_queue(queue_t *queue, char* cmd) {
     }
 
     strcpy(queue->queue[queue->rear], cmd);
-    fprintf(stderr,"[INFO] en_queue successfully\n");
+    DEBUG("en_queue: %s", cmd);
     return 0;
 }
 
 /*Read an element from Queue*/
 int de_queue(queue_t *queue, char *str) {
     if (queue->front ==  -1) {
-        fprintf(stderr,"[WARN] Queue is empty\n");
+        DEBUG("[WARN] Queue is empty\n");
         return -1;
     }
     
     strcpy(str, queue->queue[queue->front]);
-    // printf("\n %s deleted", queue->queue[queue->front]);
+    DEBUG("de_queue: %s", queue->queue[queue->front]);
     if (queue->front == queue->rear) {
         queue->front =  -1;
         queue->rear =  -1;
@@ -57,6 +64,10 @@ int de_queue(queue_t *queue, char *str) {
         queue->front++;
 
     return 0;
+}
+
+int is_empty(queue_t *queue) {
+    return (queue->front ==  -1);
 }
 
 /*Print all queue element to screen*/

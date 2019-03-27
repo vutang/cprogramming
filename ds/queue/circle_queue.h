@@ -15,3 +15,5 @@ typedef struct queue queue_t;
 /*Initialize Queue*/
 void ini_queue(queue_t *queue);
 int en_queue(queue_t *queue, char* cmd);
+int de_queue(queue_t *queue, char *str);
+int is_empty(queue_t *queue);
