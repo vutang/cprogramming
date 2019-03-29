@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "list.h"
+
+#include "list-kernel.h"
 
 struct demo_node {
 	struct list_head list;
