@@ -2,10 +2,12 @@ TARGET = unit_test_ll_singly
 OBJS = unit_test_ll_singly.o ll_singly.o
 HEADERS = ll_singly.h
 
-all: $(TARGET)
+all: $(TARGET) libsll.a
 
 $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) 
+
+libsll.a:
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< -g
