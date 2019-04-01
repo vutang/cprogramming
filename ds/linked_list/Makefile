@@ -1,6 +1,6 @@
-TARGET = list-kernel-test.elf
-
-OBJS = list-kernel-test.o
+TARGET = unit_test_ll_singly
+OBJS = unit_test_ll_singly.o ll_singly.o
+HEADERS = ll_singly.h
 
 all: $(TARGET)
 

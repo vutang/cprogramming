@@ -5,8 +5,8 @@
  *
  *****************************************************************************/
 
-#ifndef CTCP_LINKED_LIST_H
-#define CTCP_LINKED_LIST_H
+#ifndef LL_DOUBLY_H
+#define LL_DOUBLY_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -121,4 +121,4 @@ ll_node_t *ll_back(linked_list_t *list);
  */
 unsigned int ll_length(linked_list_t *list);
 
-#endif /* CTCP_LINKED_LIST_H */
+#endif /* LL_DOUBLY_H */
