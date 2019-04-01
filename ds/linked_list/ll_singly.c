@@ -1,8 +1,8 @@
 /*
 * @Author: vutang
 * @Date:   2019-04-01 17:25:00
-* @Last Modified by:   vutang
-* @Last Modified time: 2019-04-01 18:34:43
+* @Last Modified by:   Vu Tang
+* @Last Modified time: 2019-04-01 23:04:41
 */
 
 #include <stdlib.h>
@@ -92,5 +92,16 @@ int ll_add_tail(linked_list_t *list, void *object, int size)
 			curr_node = curr_node->next;
 		curr_node->next = node;
 	}
+	return 0;
+}
+
+int ll_del_head(linked_list_t *list)
+{
+	if (list == NULL)
+		return 0;
+	ll_node_t *curr_node = list->head->next;
+	free(list->head);
+	list->head = curr_node;
+	list->length--;
 	return 0;
 }

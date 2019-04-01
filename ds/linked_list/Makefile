@@ -8,6 +8,7 @@ $(TARGET): $(OBJS)
 	$(CC) -o $(TARGET) $(OBJS) 
 
 libsll.a:
+	ar rcs libsll.a ll_singly.o
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< -g
