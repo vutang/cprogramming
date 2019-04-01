@@ -1,6 +1,6 @@
-TARGET = stack_unit_test.elf
+TARGET = unit_test_stack_array.elf
 
-OBJS = stack.o stack_unit_test.o
+OBJS = stack_array.o unit_test_stack_array.o
 HEADER = stack.h
 
 all: $(TARGET)
