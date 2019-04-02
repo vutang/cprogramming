@@ -1,4 +1,4 @@
-TARGET = unit_test_ll_singly
+TARGET = unit_test_ll_singly.elf
 OBJS = unit_test_ll_singly.o ll_singly.o
 HEADERS = ll_singly.h
 
