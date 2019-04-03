@@ -2,7 +2,7 @@
 * @Author: vutang
 * @Date:   2019-04-03 12:57:08
 * @Last Modified by:   Vu Tang
-* @Last Modified time: 2019-04-03 23:18:29
+* @Last Modified time: 2019-04-03 23:49:39
 */
 
 #include <stdio.h>
@@ -166,4 +166,34 @@ void bubble_sort_recursion(int arr[], int n)
 	bubble_sort_recursion(arr, n-1);
 
 	return;
+}
+
+/*m > n*/
+void insert(int arr[], int m, int n)
+{
+	if (m <= n)
+		return;
+	int i, tmp = arr[m];
+	for (i = m; i > n; i--) 
+		arr[i] = arr[i-1];
+	arr[n] = tmp;
+}
+
+void insertion_sort(int arr[], int n)
+{
+	int i, j;
+	for (i = 1; i < n; i++) {
+		#ifdef TEST
+		printf("Round %d\n", i);
+		print_arr(arr, n);
+		#endif
+
+		for (j = 0; j <= i; j++)
+			if (arr[i] < arr[j])
+				insert(arr, i, j);
+		
+		#ifdef TEST
+		print_arr(arr, n);
+		#endif
+	}
 }
