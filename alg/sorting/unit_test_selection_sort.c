@@ -1,14 +1,16 @@
 /*
 * @Author: vutang
 * @Date:   2019-04-03 12:58:52
-* @Last Modified by:   vutang
-* @Last Modified time: 2019-04-03 16:20:43
+* @Last Modified by:   Vu Tang
+* @Last Modified time: 2019-04-03 22:07:03
 */
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sort.h"
+
 #define DATA_IN "./rand_number.dat"
-#define N 80
+#define N 10
 
 #ifdef DEBUG
 #define pr_dbg(s, ...) printf("%s#%d[DEBUG]", __FILE__, __LINE__); \
