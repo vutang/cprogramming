@@ -1,19 +1,12 @@
 /*
 * @Author: vutang
 * @Date:   2019-04-03 12:57:08
-* @Last Modified by:   Vu Tang
-* @Last Modified time: 2019-04-03 23:18:29
+* @Last Modified by:   vutang
+* @Last Modified time: 2019-04-04 11:33:26
 */
 
 #include <stdio.h>
-#include "sort.h"
-
-static void swap(int *xp, int *yp) 
-{ 
-    int temp = *xp; 
-    *xp = *yp; 
-    *yp = temp; 
-} 
+#include "sort.h" 
 
 // Return minimum index in a[i:j]
 int recursion_min_index(int a[], int m, int n) 
@@ -40,8 +33,6 @@ int min_index(int arr[], int m, int n)
 	}
 	return m;
 }
-
-#define TEST
 
 void selection_sort(int arr[], int n) 
 { 
@@ -93,13 +84,6 @@ void stable_selection_sort(int arr[], int n)
 	} 
 }
 
-void print_arr(int arr[], int n) {
-	int i;
-	for (i = 0; i < n; i++)
-		printf("%d ", arr[i]);
-	printf("\n");
-}
-
 void bubble_sort(int arr[], int n)
 { 
     int i, j, k; 
@@ -148,13 +132,15 @@ void bubble_sort_recursion(int arr[], int n)
 	if (n == 1)
 		return;
 
+	int i;
+
 	#ifdef TEST
 	printf("---");
 	print_arr(arr, n);
 	#endif 
 
 	/*The biggest one is moved to the end of array*/
-	for (int i=0; i<n-1; i++) 
+	for (i=0; i<n-1; i++) 
 		if (arr[i] > arr[i+1]) 
 			swap(&arr[i], &arr[i+1]);
 	
