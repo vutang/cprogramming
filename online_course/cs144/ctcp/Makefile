@@ -24,7 +24,7 @@ $(DEPS): .%.d : %.c
 	$(CC) -MM $(CFLAGS) $<  > $@
 
 ctcp: $(OBJS)
-	$(CC) $(CFLAGS) -o ctcp $(OBJS)
+	$(CC) $(CFLAGS) -o ctcp.elf $(OBJS)
 
 submit: clean
 	tar -czf $(TAR) $(SUBMIT)
