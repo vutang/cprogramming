@@ -1,1 +1,0 @@
-list-kernel.h is library which is get from Linux kernel source.
