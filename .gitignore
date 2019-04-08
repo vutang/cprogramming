@@ -7,3 +7,4 @@ log*
 *.a
 *.so
 *.dat
+*.so*
