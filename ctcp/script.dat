@@ -1,0 +1,6 @@
+
+Server:
+	sudo ./ctcp -s -p 8888 -w 4 -d
+
+Client: 
+	sudo./ctcp -p 9999 -c localhost:8888 -w 4 -d

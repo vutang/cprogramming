@@ -1,0 +1,4 @@
+Lab1 (ctcp_lab1.c): 
+- all requirements have done
+- Connection Teardonw feature is not work properly with more than one connections.
+- lab1 also supports running application (in server).
