@@ -3,7 +3,7 @@
 /*Callback Function Definition
 	Define a function pointer prototype
 */
-typedef int (*PrintFunc) (void *data);
+typedef int (*print_func) (void *data);
 
 /*Callee 0*/
 int PrintInt(void *data) {
@@ -24,10 +24,10 @@ int PrintString(void *data) {
 }
 
 /*Caller
-	Use PrintFunc as a prototype
+	Use print_func as a prototype
 */
-void Logger(void *CallBack, PrintFunc PriFunc) {
-	(*PriFunc)(CallBack);
+void logger(void *callback, print_func printfunc) {
+	(*printfunc)(callback);
 }
 
 int main () {
@@ -35,9 +35,9 @@ int main () {
 	int i = 2;
 	float f = 3.1415926535;
 
-	Logger(&i, &PrintInt);
-	Logger("It is a string", &PrintString);
-	Logger(&f, &PrintFloat);
+	logger(&i, &PrintInt);
+	logger("It is a string", &PrintString);
+	logger(&f, &PrintFloat);
 
 	return 0;
 }
