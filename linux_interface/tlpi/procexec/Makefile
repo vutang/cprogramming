@@ -4,7 +4,8 @@ TARGET = t_fork
 LIBDIR = ../lib
 OBJS = 	$(LIBDIR)/error_functions.o \
 		$(LIBDIR)/get_num.o \
-		$(LIBDIR)/curr_time.o
+		$(LIBDIR)/curr_time.o \
+		$(LIBDIR)/print_wait_status.o
 
 
 $(TARGET): $(TARGET).o $(OBJS)
