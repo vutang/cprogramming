@@ -38,8 +38,8 @@ main(int argc, char *argv[])
 
     if (close(STDOUT_FILENO) == -1)
         errMsg("close");
-    // if (close(STDOUT_FILENO) == -1)
-        // errMsg("close");
+    if (close(STDOUT_FILENO) == -1)
+        errMsg("close");
 
     exit(EXIT_SUCCESS);
 }
