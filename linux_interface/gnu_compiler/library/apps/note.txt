@@ -13,3 +13,7 @@
 	lib_dir is directory which has: *.so (Dynamic) or *.a (Static)
 
 	-I <system headers dir>
+
+* Use
+nm <object file> or ar -t <lib.a>
+to list all object in file.
