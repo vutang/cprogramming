@@ -1,6 +1,6 @@
 CC = gcc
 
-TAR = externalSort
+TAR = externalSort.elf
 SRC = externalSort.c
 LIB = heapSort.c  heapSort.h
 
