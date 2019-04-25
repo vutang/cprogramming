@@ -10,3 +10,4 @@ log*
 *.so*
 tmp
 *.csv
+*.log
