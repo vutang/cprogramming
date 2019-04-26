@@ -145,15 +145,14 @@ int main (int argc, char *argv[])
 			}
 		}
 
-		printf("%s, size %ld\n", \
+		printf("%s, %ld (MBs) ", \
 			file_name, *(part_size + i) * sizeof(int) / 1024 / 1024);
-
+		fflush(stdout);
 	    fclose(fout);
 	}
 
 	fclose(fin);
-	printf("count size %d\n", count);
-	printf("breakdown file into %d parts\n", number_of_part);
+	printf("\nbreakdown file into %d parts\n", number_of_part);
 	
 	// for (i = 0; i < number_of_part; i++)
 	// 	printf("%d, ", *(part_size + i));
@@ -186,7 +185,8 @@ int main (int argc, char *argv[])
 			printf("clock() fail\n");
 			exit(1);
 		}
-		heapSort(arr, *(part_size + i));
+		// heapSort(arr, *(part_size + i));
+		quick_sort(arr, *(part_size + i));
 		usleep(1000);
 		tick2 = clock();
 		if (tick2 == -1) {
@@ -219,9 +219,11 @@ int main (int argc, char *argv[])
 
 	/*Merger*/
 	/*Read data for mergering*/
-	for (i = 0; i < MAX_PART + 1; i++) {
+	int bucket_size = (int) ((ram_size * 1024 * 1024 / (number_of_part + 1)) / 4);
+	printf("bucket_size %d\n", bucket_size);
+	for (i = 0; i < number_of_part + 1; i++) {
 		// printf("allocate %d\n", i);
-		bucket[i] = malloc(BUCKET_SIZE * sizeof(int));
+		bucket[i] = malloc(bucket_size * sizeof(int));
 		if (!bucket[i]) {
 			printf("malloc() bucket fail\n");
 			exit(0);
@@ -245,11 +247,16 @@ int main (int argc, char *argv[])
 
     printf("Merger\n");
     min_pos = 0;
+	tick1 = clock();
+	if (tick1 == -1) {
+		printf("clock() fail\n");
+		exit(1);
+	}
 	while (buf_active_flag != 0) {
 		for (i = 0; i < number_of_part; i++) {
 			if ((buf_empty_flag & (1 << i)) && (buf_active_flag & (1 << i))) {
 				
-				buf_size_remain[i] = fread(bucket[i], sizeof(int), BUCKET_SIZE, fp[i]);
+				buf_size_remain[i] = fread(bucket[i], sizeof(int), bucket_size, fp[i]);
 				// printf("Fill bucket %d, %d items\n", i, buf_size_remain[i]);
 				if (buf_size_remain[i] == 0) {
 					printf("BUF %d is not ACTIVE\n", i);
@@ -280,7 +287,7 @@ int main (int argc, char *argv[])
 			}
 		}
 		
-		bucket[MAX_PART][cur_pos[MAX_PART]] = min_value;
+		bucket[number_of_part][cur_pos[number_of_part]] = min_value;
 		/*Update status of buff that has minimum*/
 		if (cur_pos[min_pos] == buf_size_remain[min_pos] - 1) {
 			buf_empty_flag |= (1 << min_pos);
@@ -290,24 +297,32 @@ int main (int argc, char *argv[])
 
 		// printf("%d, %d\n", min_pos, cur_pos[min_pos]);
 
-		if ((cur_pos[MAX_PART] == BUCKET_SIZE - 1) || 
-			(buf_active_flag == 0 && cur_pos[MAX_PART] !=0)) {
+		if ((cur_pos[number_of_part] == bucket_size - 1) || 
+			(buf_active_flag == 0 && cur_pos[number_of_part] !=0)) {
 			// printf("flush bucket: %d, 0x%x\n", cur_pos[MAX_PART], buf_active_flag);
-			fwrite(bucket[MAX_PART], sizeof(int), cur_pos[MAX_PART] + 1, fout);
+			fwrite(bucket[number_of_part], sizeof(int), cur_pos[number_of_part] + 1, fout);
 			// for (i = 0; i < cur_pos[MAX_PART] + 1; i++)
 				// fwrite(&bucket[MAX_PART][i], sizeof(int), 1, fout);
-			cur_pos[MAX_PART] = 0;
+			cur_pos[number_of_part] = 0;
 		}
 		else {
-			cur_pos[MAX_PART]++;
+			cur_pos[number_of_part]++;
 		}
 	}
 
-	for (i = 0; i < number_of_part; i++) {
+	printf("free\n");
+	for (i = 0; i < number_of_part + 1; i++)
 		free(bucket[i]);
+	for (i = 0; i < number_of_part; i++)
 		fclose(fp[i]);
+	tick2 = clock();
+	if (tick2 == -1) {
+		printf("clock() fail\n");
+		exit(1);
 	}
 
+	printf("Merger time: %0.2f (secs)\n", \
+		(double) (tick2 - tick1) / CLOCKS_PER_SEC);
 	/*Check output whether it is in order or not*/
 	fseek(fout, 0, SEEK_SET);
 	int n1 = 0;	
