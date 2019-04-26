@@ -22,6 +22,11 @@ APP6 = unit_test_count_sort
 TARGET6 = $(APP6).elf
 OBJS6 = $(APP6).o count-sort.o
 
+LIB_OBJS = 	sort.o \
+			quick-sort.o \
+			util.o
+LIB = libsort
+
 all: $(TARGET1) $(TARGET2) $(TARGET3) $(TARGET4) $(TARGET5) $(TARGET6)
 
 $(TARGET1): $(COMMON_OBJS) $(OBJS1)
@@ -41,6 +46,11 @@ $(TARGET5): $(COMMON_OBJS) $(OBJS5)
 
 $(TARGET6): $(COMMON_OBJS) $(OBJS6)
 	$(CC) -o $(TARGET6) $(OBJS6) $(COMMON_OBJS)
+
+$(LIB): $(LIB).a
+
+$(LIB).a:$(LIB_OBJS) 
+	$(AR) rcs $@ $(LIB_OBJS)
 
 %.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< -g $(LIBS)
