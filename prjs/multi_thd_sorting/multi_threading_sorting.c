@@ -2,7 +2,7 @@
 * @Author: Vu Tang
 * @Date:   2019-04-25 22:00:34
 * @Last Modified by:   vutang
-* @Last Modified time: 2019-04-26 16:50:25
+* @Last Modified time: 2019-04-26 17:12:19
 */
 
 #include <stdio.h>
@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
 	}
 
 	start = clock();
+	clock_gettime(CLOCK_MONOTONIC, &start_);
 	if ((fp = fopen(file_name, "r")) == NULL) {
 		printf("fopen() fail\n");
 		return 0;
@@ -223,7 +224,11 @@ int main(int argc, char *argv[])
 	}
 	fclose(fp); /*Close output2.dat*/
 
-	printf("Normal sorting time: %.2f (secs)\n", \
-		(double) (clock() - start) / CLOCKS_PER_SEC);
+	clock_gettime(CLOCK_MONOTONIC, &finish_);
+	elapsed = (finish_.tv_sec - start_.tv_sec);
+	elapsed += (finish_.tv_nsec - start_.tv_nsec) / 1000000000.0;
+	printf("Normal sorting time: %.2f (secs), %.2f\n", \
+		(double) (clock() - start) / CLOCKS_PER_SEC, \
+		elapsed);
 	return 0;
 }
