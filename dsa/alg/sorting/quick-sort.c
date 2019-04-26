@@ -2,11 +2,10 @@
 * @Author: vutang
 * @Date:   2019-04-04 11:39:38
 * @Last Modified by:   vutang
-* @Last Modified time: 2019-04-04 13:37:27
+* @Last Modified time: 2019-04-26 13:28:29
 */
 
 #include <stdio.h>
-#define TEST
 
 int partition(int arr[], int low, int high) 
 {
@@ -34,7 +33,7 @@ int partition(int arr[], int low, int high)
 	return (pos + 1);
 }
 
-void quick_sort(int arr[], int low, int high) 
+void quick_sort_engine(int arr[], int low, int high) 
 {
 	int pivot;
 	if (low < high) {
@@ -43,7 +42,11 @@ void quick_sort(int arr[], int low, int high)
 		print_arr(arr, high - low + 1);
 		#endif 
 		pivot = partition(arr, low, high);
-		quick_sort(arr, low, pivot - 1);
-		quick_sort(arr, pivot + 1, high);
+		quick_sort_engine(arr, low, pivot - 1);
+		quick_sort_engine(arr, pivot + 1, high);
 	}
+}
+
+void quick_sort(int arr[], int n) {
+	quick_sort_engine(arr, 0, n - 1);
 }
