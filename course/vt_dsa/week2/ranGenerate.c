@@ -13,7 +13,8 @@
 
 int main(int argc, char *argv[]) 
 {
-	int i, n, size = -1, opt;
+	long int i, size = -1;
+	int n, opt;
 	char *ptr;
 	FILE *fp;
 
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
 		size = DEFAULT_SIZE;
 	}
 	else
-		printf("Got size: %d\n", size);
+		printf("Got size: %ld\n", size);
 	
 	tick1 = clock();
 	if (tick1 == -1) {
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("Run time: %.2f (secs)\n",
+	printf("Run time for generating number: %.2f (secs)\n",
 		(double) (tick2 - tick1) / CLOCKS_PER_SEC);
 
 	/*Check file info*/
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
 		printf("stat() fail\n");
 	}
 
-	printf("Actual file size: %d (KBytes)\n", (int) sb.st_size / 1024);
+	printf("Actual file size: %d (KBytes)\n", sb.st_size / 1024);
 
 	return 0;
 }
