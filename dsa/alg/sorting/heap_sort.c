@@ -35,12 +35,13 @@ void heapify(int arr[], int n, int i) {
  
 // main function to do heap sort
 void heapSort(int arr[], int n) {
+    int i;
     // Build heap (rearrange array)
-    for (int i = n / 2 - 1; i >= 0; i--)
+    for (i = n / 2 - 1; i >= 0; i--)
         heapify(arr, n, i);
  
     // One by one extract an element from heap
-    for (int i=n-1; i>=0; i--) {
+    for (i = n-1; i >= 0; i--) {
         // Move current root to end
         swap(&arr[0], &arr[i]);
  
@@ -51,7 +52,8 @@ void heapSort(int arr[], int n) {
  
 /* A utility function to print array of size n */
 void printArray(int arr[], int n) {
-    for (int i=0; i<n; ++i)
+    int i;
+    for (i = 0; i < n; ++i)
         printf("%d ", arr[i]);
     printf("\n");
 }

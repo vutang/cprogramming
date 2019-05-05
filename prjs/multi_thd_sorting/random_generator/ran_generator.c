@@ -7,34 +7,40 @@
 #include <sys/stat.h> /*stat()*/
 
 #include <time.h>
+#include <string.h>
 
 #define DEFAULT_SIZE 80 /*In MegaByte*/
 #define OUTPUT "./uInput.dat"
 
 int main(int argc, char *argv[]) 
 {
-	long int i, size = -1;
 	int n, opt;
+	long int i, size = -1;
 	char *ptr;
 	FILE *fp;
-
+	char file_name[100] = OUTPUT;
 	/*Check file*/
 	struct stat sb;
 
 	/*Time*/
 	clock_t tick1, tick2;
 
-	while ((opt = getopt(argc, argv, "n:")) != -1) {
+	while ((opt = getopt(argc, argv, "n:o:")) != -1) {
 		switch (opt) {
 		case 'n':
 			size = atoi(optarg);
+			break;
+		case 'o':
+			memcpy(file_name, optarg, strlen(optarg));
 			break;
 		default:
 			break;
 		}
 	}
 
-	if ((fp = fopen(OUTPUT, "w+")) == NULL) {
+
+	printf("Open %s\n", file_name);
+	if ((fp = fopen(file_name, "w+")) == NULL) {
 		printf("Cannot open file!\n");
 		return 0;
 	}
@@ -66,15 +72,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("Run time for generating number: %.2f (secs)\n",
+	printf("Run time: %.2f (secs)\n",
 		(double) (tick2 - tick1) / CLOCKS_PER_SEC);
 
 	/*Check file info*/
-	if (stat(OUTPUT, &sb) == -1) {
+	if (stat(file_name, &sb) == -1) {
 		printf("stat() fail\n");
 	}
 
-	printf("Actual file size: %d (KBytes)\n", sb.st_size / 1024);
+	printf("Actual file size: %d (KBytes)\n", (int) sb.st_size / 1024);
 
 	return 0;
 }
