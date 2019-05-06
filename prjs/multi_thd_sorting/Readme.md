@@ -1,0 +1,1 @@
+Using multi-threads to sorting for improving speed by using multi-cores.
