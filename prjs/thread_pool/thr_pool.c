@@ -12,6 +12,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <time.h>
+#include <stdio.h>
 
 /*
  * FIFO queued job
@@ -148,6 +149,8 @@ worker_thread(void *arg)
 	active_t active;
 	struct timespec ts;
 
+	printf("Worker is created\n");
+
 	/*
 	 * This is the worker's main loop.  It will only be left
 	 * if a timeout occurs or if the pool is being destroyed.
@@ -210,6 +213,7 @@ worker_thread(void *arg)
 			 * the integrity of the pool is thereby maintained.
 			 */
 			pthread_cleanup_pop(1);	/* job_cleanup(pool) */
+			printf("Job done. Next\n");
 		}
 		if (timedout && pool->pool_nthreads > pool->pool_minimum) {
 			/*
@@ -221,6 +225,7 @@ worker_thread(void *arg)
 		}
 	}
 	pthread_cleanup_pop(1);	/* worker_cleanup(pool) */
+	printf("Worker is clean\n");
 	return (NULL);
 }
 
