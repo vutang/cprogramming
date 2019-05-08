@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <errno.h>
+#include <time.h>
 
 /*
  * FIFO queued job
@@ -46,7 +47,7 @@ struct thr_pool {
 	job_t		*pool_tail;	/* tail of FIFO job queue */
 	pthread_attr_t	pool_attr;	/* attributes of the workers */
 	int		pool_flags;	/* see below */
-	uint_t		pool_linger;	/* seconds before idle workers exit */
+	unsigned int		pool_linger;	/* seconds before idle workers exit */
 	int		pool_minimum;	/* minimum number of worker threads */
 	int		pool_maximum;	/* maximum number of worker threads */
 	int		pool_nthreads;	/* current number of worker threads */
@@ -74,8 +75,10 @@ create_worker(thr_pool_t *pool)
 	sigset_t oset;
 	int error;
 
+	pthread_t thr_tid;
+
 	(void) pthread_sigmask(SIG_SETMASK, &fillset, &oset);
-	error = pthread_create(NULL, &pool->pool_attr, worker_thread, pool);
+	error = pthread_create(&thr_tid, &pool->pool_attr, worker_thread, pool);
 	(void) pthread_sigmask(SIG_SETMASK, &oset, NULL);
 	return (error);
 }
@@ -143,7 +146,7 @@ worker_thread(void *arg)
 	job_t *job;
 	void *(*func)(void *);
 	active_t active;
-	timestruc_t ts;
+	struct timespec ts;
 
 	/*
 	 * This is the worker's main loop.  It will only be left
@@ -257,7 +260,7 @@ clone_attributes(pthread_attr_t *new_attr, pthread_attr_t *old_attr)
 }
 
 thr_pool_t *
-thr_pool_create(uint_t min_threads, uint_t max_threads, uint_t linger,
+thr_pool_create(unsigned int min_threads, unsigned int max_threads, unsigned int linger,
 	pthread_attr_t *attr)
 {
 	thr_pool_t	*pool;
