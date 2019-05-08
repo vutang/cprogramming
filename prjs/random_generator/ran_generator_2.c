@@ -2,7 +2,7 @@
 * @Author: vutang
 * @Date:   2019-05-07 17:56:42
 * @Last Modified by:   vutang
-* @Last Modified time: 2019-05-07 18:10:57
+* @Last Modified time: 2019-05-08 09:02:04
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@
 
 int main(int argc, char **argv) 
 {
-	int n = 50, i, j, tmp, ch_cnt = 0;
+	int n = 50, i, j, tmp, ch_cnt = 0, size;
 	char number_str[60];
 	if (argc != 1)
 		n = atoi(argv[1]);
@@ -25,7 +25,8 @@ int main(int argc, char **argv)
 	srand(time(NULL));
 
 	for (i = 0; i < n; i++) {
-		for (j = 0; j < 5; j++) {
+		size = rand() % 5 + 1;
+		for (j = 0; j < size; j++) {
 			tmp = rand();
 			ch_cnt += sprintf(number_str + ch_cnt, "%d", tmp);
 		}
