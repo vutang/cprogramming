@@ -1,13 +1,14 @@
 CC = gcc
 
-TAR = externalSort.elf
-SRC = externalSort.c
+TAR = external_sort_2
+# SRC = externalSort.c
 # LIB = heapSort.c  heapSort.h
 
 LIB_DIR = /media/vutt6/linuxwrk/programming/dsa/alg/sorting/
+HDR_DIR = /media/vutt6/linuxwrk/programming/dsa/alg/sorting/
 LIBS = -lm -lsort
 
-all:	
-	$(CC) -o $(TAR) $(SRC) -L$(LIB_DIR) $(LIBS)
+all:
+	$(CC) -o $(TAR).elf $(TAR).c -L$(LIB_DIR) $(LIBS) -I$(HDR_DIR)
 clean:
-	rm $(TAR)
+	rm $(TAR).elf
