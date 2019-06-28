@@ -1,0 +1,59 @@
+# Checking AD9250 SPI Bus
+
+LOGFILEDIR=/home/root/spicheck.log
+BOOTCNTDIR=/home/root/bootcount.dat
+
+TESTTIME=20
+
+# Init
+if [ $1 = "--init" ]; then
+	echo "Initializing..."
+	rm $LOGFILEDIR
+	rm $BOOTCNTDIR
+	exit 0
+fi
+
+DATE=`date`
+if [ -e $LOGFILEDIR ]; then
+		echo "------------" >> $LOGFILEDIR
+        echo "$DATE" >> $LOGFILEDIR
+else
+        echo "$DATE: log file is created " > $LOGFILEDIR
+fi
+
+if [ -e $BOOTCNTDIR ]; then
+	BOOTCOUNT=`cat $BOOTCNTDIR`
+	BOOTCOUNT=$(($BOOTCOUNT + 1))
+else
+	#The fist time
+	echo "Create boot count file and init BOOTCOUNT" >> $LOGFILEDIR
+	BOOTCOUNT=1
+fi
+echo $BOOTCOUNT > $BOOTCNTDIR
+echo "Test count: $BOOTCOUNT" >> $LOGFILEDIR
+
+if [ $BOOTCOUNT -ge $TESTTIME ]; then
+	echo "Test count is reach expected value -> exit testing" >> $LOGFILEDIR
+	exit 0
+fi
+
+CHIPID=`rrutool read 47 0x1 | awk '{print $3}'`
+if [ $CHIPID != "0xb9" ]; then
+	echo "Test Fail at 47" >> $LOGFILEDIR
+	printf "%s\n" $CHIPID >> $LOGFILEDIR
+fi
+
+CHIPID=`rrutool read 48 0x1 | awk '{print $3}'`
+if [ $CHIPID != "0xb9" ]; then
+	echo "Test Fail at 48" >> $LOGFILEDIR
+	printf "%s\n" $CHIPID >> $LOGFILEDIR
+fi
+
+CHIPID=`rrutool read 49 0x1 | awk '{print $3}'`
+if [ $CHIPID != "0xb9" ]; then
+	echo "Test Fail at 49" >> $LOGFILEDIR
+	printf "%s\n" $CHIPID >> $LOGFILEDIR
+fi
+
+echo "reboot" >> $LOGFILEDIR
+reboot; exit;

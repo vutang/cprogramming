@@ -1,0 +1,5 @@
+# $1 is controller base, $2 is length
+BASE=0x43c40000
+poke $(($BASE + 0x4)) $1
+poke $BASE 1
+poke $BASE 0

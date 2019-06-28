@@ -1,0 +1,129 @@
+#!/bin/sh
+# @Author: vutt6
+# @Date:   2018-08-09 10:42:02
+# This script is used for checking and loading bitstream for FPGA
+
+fpga_infofile="fpga_info.txt"
+fpga_tarfile="fpga_bitstream.tar.gz"
+fpga_defaultfile="fpga_default.tar.gz"
+
+fpga_tardir="/home/root/viettel/config/bitstream/$fpga_tarfile"
+fpga_defaultdir="/home/root/viettel/config/bitstream/$fpga_defaultfile"
+tmpdir="/tmp/bitstream"
+logdir=/home/root/load_bit.log
+
+# Local configuration
+fw_cfgdir="/home/root/viettel/config"
+fw_releasedir="$fw_cfgdir/release.txt"
+fw_bandwidth="$fw_cfgdir/bandwidth.cfg"
+
+echo "This is upgrade FPGA bitstream log"
+
+logger() {
+	echo "[FPGABIT] $1"
+}
+
+load_default_bit() {
+	rm -rf $tmpdir/*
+	test -f "$fpga_defaultdir" && tar -C $tmpdir -xzf "$fpga_defaultdir"
+
+	rc=$?
+	if [ $rc -ne 0 ]; then
+		logger "Error: default bitstream not exist or can not be extract"
+		logger "Using default bitstream in BOOT.BIN"
+		exit 0
+	fi
+	cd $tmpdir
+
+	test -f MD5SUMS && md5sum -c MD5SUMS >/dev/null
+	if [ $? -ne 0 ]; then
+		echo "Error: Firmware image is corrupt"
+		echo "Using default bitstream in BOOT.BIN"
+		rm -rf /tmp/bitstream
+		exit 0
+	fi
+	cat fpga.bit.bin > /dev/xdevcfg
+	logger "Default bit is loaded"
+}
+
+logger "Bitstream file: $fpga_tardir"
+
+# Check if bitstream tar file is exist or not and then extract
+rm -rf $tmpdir
+mkdir -p $tmpdir
+trap "rm -rf $tmpdir" EXIT
+
+test -f "$fpga_tardir" && tar -C $tmpdir -xzf "$fpga_tardir"
+
+rc=$?
+if [ $rc -ne 0 ]; then
+	logger "Error: Not a valid bitstream"
+	logger "Using default bitstream"
+	load_default_bit
+	exit 0
+fi
+
+cd $tmpdir
+
+# Check fpga.bit.bin MD5
+test -f MD5SUMS && md5sum -c MD5SUMS >/dev/null
+if [ $? -ne 0 ]; then
+	logger "Error: fpga.bit.bin in $fpga_tarfile is corrupt"
+	logger "Using default bitstream"
+	load_default_bit
+	rm -rf $tmpdir
+	exit 0
+fi
+
+# Check fpga_info.txt
+# HW INFO
+test -f $fpga_infofile && cat $fpga_infofile | grep "RRU Hardware" >/dev/null && cat $fpga_infofile | grep "Topo" >/dev/null && cat $fpga_infofile | grep "Mode" >/dev/null && cat $fpga_infofile | grep "BW1" >/dev/null && cat $fpga_infofile | grep "BW2" >/dev/null
+if [ $? -ne 0 ]; then
+	logger "$fpga_infofile does not exist or is in wrong format"
+	logger "Using default bitstream"
+	load_default_bit
+	rm -rf $tmpdir
+	exit 0
+fi
+
+hw_version=`cat $fpga_infofile | grep "RRU Hardware" | awk {'print $4'} | sed 's/["",]//g'`
+topo=`cat $fpga_infofile | grep "Topo" | awk {'print $3'} | sed 's/["",]//g'`
+mode=`cat $fpga_infofile | grep "Mode" | awk {'print $3'} | sed 's/["",]//g'`
+bw1=`cat $fpga_infofile | grep "BW1" | awk {'print $3'} | sed 's/["",]//g'`
+bw2=`cat $fpga_infofile | grep "BW2" | awk {'print $3'} | sed 's/["",]//g'`
+
+logger "In fpga_info.txt: $hw_version, $topo, $mode, $bw1, $bw2"
+
+# Check release file
+test -f $fw_releasedir && cat $fw_releasedir | grep "RRU Hardware" >/dev/null
+if [ $? -ne 0 ]; then
+	logger "$fpga_infofile is not exist or in wrong format"
+	logger "Using default bitstream"
+	load_default_bit
+	rm -rf $tmpdir
+	exit 0
+fi
+
+release_hw_version=`cat $fw_releasedir | grep "RRU Hardware" | awk {'print $4'} | sed 's/["",]//g'`
+logger "FW-release: $release_hw_version"
+
+if [ $release_hw_version != $hw_version ]; then
+	logger "Mismatch in hw_version"
+	logger "Using default bitstream"
+	load_default_bit
+	rm -rf $tmpdir
+	exit 0
+fi
+
+current_bw=`cat $fw_bandwidth`
+logger "Current config: bw $current_bw Hz"
+
+if [ $bw1 != $current_bw ]; then
+	logger "Mismatch in bandwidth"
+	load_default_bit
+	rm -rf $tmpdir
+	exit 0
+fi
+
+logger "Start to write bitstream"
+cat fpga.bit.bin > /dev/xdevcfg

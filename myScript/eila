@@ -1,0 +1,36 @@
+DMABASE=0x40410000
+if [ $1 = '--dmadump' ]; then
+	echo dmareg > /tmp/dmadump.reg
+	CNT=0;
+	while [ $(($DMABASE + CNT)) -le $(($DMABASE + 0x58)) ];
+	do
+		VAR=`peek $(($DMABASE + CNT))`                    
+        printf "0x%02x\t0x%08x\n" $CNT $VAR >> /tmp/dmadump.reg
+		CNT=$(($CNT + 4))
+	done
+	exit 0;
+fi
+
+BYTES=$(($1 * 4 + 8))
+
+# run/stop bit
+VAR=`peek $(($DMABASE + 0x30))`
+VAR=$(($VAR | 1))
+poke $(($DMABASE + 0x30)) $VAR
+peek $(($DMABASE + 0x30))
+
+# enable interrupt
+VAR=`peek $(($DMABASE + 0x30))`
+VAR=$(($VAR | 0x17000)) #0x17000
+poke $(($DMABASE + 0x30)) $VAR
+# destination address
+poke $(($DMABASE + 0x48)) $2 
+# length
+poke $(($DMABASE + 0x58)) $BYTES
+
+sh capctl $1
+
+VAR=`peek $(($DMABASE + 0x30))`
+VAR=$(($VAR & 0xFFFFFFFE)) #0xFFFFFFFE
+poke $(($DMABASE + 0x30)) $VAR
+peek $(($DMABASE + 0x30))
