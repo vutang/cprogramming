@@ -1,6 +1,6 @@
 APP = thd_comm_poll.elf
 OBJS = thd_comm_poll.o circle_queue_array.o
-CFLAGS = -pthread -Wall
+CFLAGS = -pthread -Wall -DDEBUG
 
 $(APP): $(OBJS)
 	$(CC) -o $(APP) $(OBJS) $(CFLAGS)

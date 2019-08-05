@@ -17,6 +17,9 @@
 /*Pipes for poll*/
 static int pfd[2][2];
 
+/*Data queue*/
+queue_t dl_queue;
+
 static void *siggen_thd_func() 
 {
 	while (1) {
@@ -37,8 +40,9 @@ static void *siggen_thd_func()
 static void *pcie_thd_func() 
 {
 	struct pollfd plfd;
-	int ret;
+	int ret, cnt = 0;
 	char c;
+	char str[STRING_LENGTH];
 
 	plfd.fd = pfd[1][0];
 	plfd.events = POLLIN;	
@@ -58,6 +62,12 @@ static void *pcie_thd_func()
 
 		if (plfd.revents & POLLIN) {
 			pr_debug("PCIE got signal\n");
+			sprintf(str, "Test string %d", cnt++);
+			ret = en_queue(&dl_queue, str);
+			if (ret)
+				pr_debug("Queue full\n");
+
+			/*Clear Pipe*/
 			read(pfd[1][0], &c, 1);
 		}
 	}
@@ -68,6 +78,7 @@ static void *l1_thd_func()
 	struct pollfd plfd;
 	int ret;
 	char c;
+	char str[STRING_LENGTH];
 
 	plfd.fd = pfd[0][0];
 	plfd.events = POLLIN;	
@@ -87,6 +98,10 @@ static void *l1_thd_func()
 
 		if (plfd.revents & POLLIN) {
 			pr_debug("L1 got signal\n");
+			ret = de_queue(&dl_queue, str);
+			if (ret)
+				printf("de_queue fail\n");
+			printf("PCIe Got: %s\n", str);
 			read(pfd[0][0], &c, 1);
 		}
 	}
@@ -108,6 +123,9 @@ int main()
 		perror("pipe 1");
 		exit(EXIT_FAILURE);
 	}
+
+	/*Initialize queue*/
+	ini_queue(&dl_queue);
 
 	ret = pthread_create(&siggen_thd_id, NULL, siggen_thd_func, NULL);
 	if (ret != 0) {
