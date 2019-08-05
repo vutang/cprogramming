@@ -4,7 +4,15 @@
 #include <unistd.h>
 #include <poll.h>
 
+#include "circle_queue_array.h"
+
 #define TIMEOUT 5
+
+#ifdef DEBUG
+#define pr_debug(...) printf("%s", __VA_ARGS__)
+#else
+#define pr_debug(...)
+#endif
 
 /*Pipes for poll*/
 static int pfd[2][2];
@@ -49,7 +57,7 @@ static void *pcie_thd_func()
 		}
 
 		if (plfd.revents & POLLIN) {
-			printf ("PCIE got signal\n");
+			pr_debug("PCIE got signal\n");
 			read(pfd[1][0], &c, 1);
 		}
 	}
@@ -78,7 +86,7 @@ static void *l1_thd_func()
 		}
 
 		if (plfd.revents & POLLIN) {
-			printf ("L1 got signal\n");
+			pr_debug("L1 got signal\n");
 			read(pfd[0][0], &c, 1);
 		}
 	}

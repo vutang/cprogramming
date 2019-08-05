@@ -1,5 +1,5 @@
-APP = thd_comm.elf
-OBJS = thd_comm.o
+APP = thd_comm_poll.elf
+OBJS = thd_comm_poll.o circle_queue_array.o
 CFLAGS = -pthread -Wall
 
 $(APP): $(OBJS)
