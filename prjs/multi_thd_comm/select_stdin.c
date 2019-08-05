@@ -12,7 +12,6 @@ int main(void)
 	char c;
 
 	/* Watch stdin (fd 0) to see when it has input. */
-
 	FD_ZERO(&rfds);
 	FD_SET(STDIN_FILENO, &rfds);
 
