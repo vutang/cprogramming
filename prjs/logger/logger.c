@@ -102,7 +102,7 @@ int write_log_msg(char *msg) {
 			printf("%s %d - fopen: %s\n", __FUNCTION__, __LINE__, strerror(errno));
 	}
 	if (fd) {
-		write_size = fprintf(fd, "%04d-%02d-%02d %02d:%02d:%02d %s\n",
+		write_size = fprintf(fd, "%04d-%02d-%02d %02d:%02d:%02d %s",
 			tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, 
 			tm->tm_min, tm->tm_sec,msg);
 		total_space_written += write_size;   
@@ -132,16 +132,16 @@ void logger(int level, char *fname, int line_number, const char *format, ...) {
 			switch(level) {
 				/*Using color string for each type log*/
 				case DEBUG:  
-					printf("\33[34m[D] %s\33[0m\n", msg);
+					printf("\33[34m[D] %s\33[0m", msg);
 					break;
 				case INFO:
 					printf("[J] %s\n",msg);
 					break;
 				case WARN:	
-					printf("\33[33m[W] %s \33[0m\n", msg);
+					printf("\33[33m[W] %s \33[0m", msg);
 					break;
 				default :
-					printf("\33[31m[E] %s \33[0m\n", msg);
+					printf("\33[31m[E] %s \33[0m", msg);
 					break;
 			};
 		}
