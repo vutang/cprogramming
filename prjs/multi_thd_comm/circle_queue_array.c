@@ -5,13 +5,8 @@
 * @Last Modified time: 2019-03-28 00:01:16
 */
 #include "circle_queue_array.h"
+#include "../logger/logger.h"
 #include <string.h>
-
-#ifdef DEBUG
-#define pr_debug(s, ...) printf("%s\n", __VA_ARGS__);
-#else
-#define pr_debug(s, ...)
-#endif
 
 /*Initialize Queue*/
 void ini_queue(queue_t *queue) {
@@ -21,7 +16,7 @@ void ini_queue(queue_t *queue) {
 }
 
 /*Add an element to Queue*/
-int en_queue(queue_t *queue, char* cmd) {
+int en_queue(queue_t *queue, struct queue_element *element) {
     if ((queue->front == 0 && queue->rear == QUEUE_SIZE - 1) || \
         (queue->front == queue->rear + 1)) {
         return -1; /*Queue is full*/
@@ -39,20 +34,26 @@ int en_queue(queue_t *queue, char* cmd) {
         queue->rear++;
     }
 
-    strcpy(queue->queue[queue->rear], cmd);
-    printf("en_queue: %s\n", cmd);
+    // strcpy(queue->queue[queue->rear], cmd);
+    queue->queue_core[queue->rear].size = element->size;
+    memcpy(queue->queue_core[queue->rear].block, element->block, element->size);
+    LOG_DEBUG("en_queue: %d, %s\n", queue->queue_core[queue->rear].size, 
+        queue->queue_core[queue->rear].block);
     return 0;
 }
 
 /*Read an element from Queue*/
-int de_queue(queue_t *queue, char *str) {
+int de_queue(queue_t *queue, struct queue_element *element) {
     if (queue->front ==  -1) {
-        printf("[WARN] Queue is empty\n");
+        LOG_WARN("[WARN] Queue is empty\n");
         return -1;
-    }
-    
-    strcpy(str, queue->queue[queue->front]);
-    pr_debug("de_queue: %s", queue->queue[queue->front]);
+    } 
+    // strcpy(str, queue->queue[queue->front]);
+    element->size = queue->queue_core[queue->front].size;
+    memcpy(element->block, queue->queue_core[queue->rear].block, 
+        queue->queue_core[queue->front].size);
+
+    LOG_DEBUG("de_queue: %d\n", queue->queue_core[queue->front].size);
     if (queue->front == queue->rear) {
         queue->front =  -1;
         queue->rear =  -1;
@@ -76,14 +77,14 @@ void pri_queue(queue_t *queue) {
     printf("\n");
     if (queue->front > queue->rear) {
         for (i = queue->front; i < QUEUE_SIZE; i++) {
-            printf("%s ", queue->queue[i]);
+            // printf("%s ", queue->queue[i]);
         }
-        for (i = 0; i <= queue->rear; i++)
-            printf("%s ", queue->queue[i]);
+        // for (i = 0; i <= queue->rear; i++)
+            // printf("%s ", queue->queue[i]);
     }
     else {
-        for (i = queue->front; i <= queue->rear; i++)
-            printf("%s ", queue->queue[i]);
+        // for (i = queue->front; i <= queue->rear; i++)
+            // printf("%s ", queue->queue[i]);
     }
 
     return;
