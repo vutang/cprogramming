@@ -1,6 +1,7 @@
 APP = thd_comm_poll.elf
-OBJS = thd_comm_poll.o circle_queue_array.o
-CFLAGS = -pthread -Wall -DDEBUG
+OBJS = thd_comm_poll.o circle_queue_array.o ../logger/logger.o
+CFLAGS = -pthread -Wall
+HEADERS = circle_queue_array.h
 
 $(APP): $(OBJS)
 	$(CC) -o $(APP) $(OBJS) $(CFLAGS)
