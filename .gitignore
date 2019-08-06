@@ -4,6 +4,7 @@
 *.o
 *.elf
 log*
+!prjs/logger*
 *.a
 *.so
 *.dat
